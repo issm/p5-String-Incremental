@@ -50,6 +50,30 @@ sub as_string {
     return $self->order->[ $self->__i ];
 }
 
+sub set {
+    my ($self, $ch) = @_;
+    unless ( defined $ch ) {
+        die 'value to set must be specified';
+    }
+    unless ( $ch =~ /^.$/ ) {
+        die 'must be specified as a character';
+    }
+    my ($i, $found) = ( 0, 0 );
+    for ( @{$self->order} ) {
+        if ( $_ eq $ch ) {
+            $found = 1;
+            last;
+        }
+        $i++;
+    }
+    unless ( $found ) {
+        my $msg = srintf( '"%s" is not in order', $ch );
+        die $msg;
+    }
+    $self->__i( $i );
+    return "$self";
+}
+
 sub increment {
     my ($self) = @_;
     my ($i_try, $ch);
