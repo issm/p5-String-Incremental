@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/issm/p5-String-Incremental.png?branch=master)](https://travis-ci.org/issm/p5-String-Incremental)
 # NAME
 
 String::Incremental - incremental string with your rule
