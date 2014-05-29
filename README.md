@@ -8,7 +8,7 @@ String::Incremental - incremental string with your rule
     use String::Incremental;
 
     my $str = String::Incremental->new(
-        'foo-%2s-%2c-%c',
+        'foo-%2s-%2=-%=',
         sub { (localtime)[5] - 100 },
         [0..2],
         'abcd',
@@ -30,6 +30,43 @@ String::Incremental - incremental string with your rule
 # DESCRIPTION
 
 String::Incremental is ...
+
+# CONSTRUCTORS
+
+- new( @args ) : String::Incremental
+
+    $args\[0\] : Str
+
+    $args\[1\], $args\[2\], ... : (Str|ArrayRef) or (Str|CodeRef)
+
+# METHODS
+
+- as\_string() : Str
+
+    returns "current" string.
+
+    following two variables are equivalent:
+
+        my $a = $str->as_string();
+        my $b = "$str";
+
+- increment() : Str
+
+    increases positional state of order and returns its character.
+
+    following two operation are equivalent:
+
+        $str->increment();
+        $str++;
+
+- decrement() : Str
+
+    decreases positional state of order and returns its character.
+
+    following two operation are equivalent:
+
+        $str->decrement();
+        $str--;
 
 # LICENSE
 
