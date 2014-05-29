@@ -1,5 +1,5 @@
 {
-   "abstract" : "It's new $module",
+   "abstract" : "incremental string with your rule",
    "author" : [
       "issm <issmxx@gmail.com>"
    ],
@@ -44,15 +44,31 @@
       },
       "runtime" : {
          "requires" : {
+            "Data::Validator" : "1.04",
+            "Mouse" : "v2.3.0",
+            "MouseX::Types" : "0.06",
+            "Try::Tiny" : "0.22",
             "perl" : "5.008005"
          }
       },
       "test" : {
          "requires" : {
+            "Test::Exception" : "0.32",
             "Test::More" : "0.98"
          }
       }
    },
    "release_status" : "unstable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/issm/p5-String-Incremental/issues"
+      },
+      "homepage" : "https://github.com/issm/p5-String-Incremental",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/issm/p5-String-Incremental.git",
+         "web" : "https://github.com/issm/p5-String-Incremental"
+      }
+   },
    "version" : "0.01"
 }
