@@ -16,16 +16,15 @@ String::Incremental - incremental string with your rule
 
     print "$str";  # -> 'foo-14-00-a'
 
-    $str++; $str++;
-    print "$str";  # -> 'foo-14-00-c'
+    $str++; $str++; $str++;
+    print "$str";  # -> 'foo-14-00-d'
 
-    $str++; $str++;
+    $str++;
     print "$str";  # -> 'foo-14-01-a'
 
-    ...
-
+    $str->set( '22d' );
     print "$str";  # -> 'foo-14-22-d';
-    $str++;  # dies
+    $str++;  # dies, cannot ++ any more
 
 # DESCRIPTION
 
@@ -49,6 +48,10 @@ String::Incremental is ...
 
         my $a = $str->as_string();
         my $b = "$str";
+
+- set( $val : Str|ArrayRef ) : String::Incremental
+
+    sets "incrementable" cheracters to $val.
 
 - increment() : Str
 

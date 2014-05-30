@@ -3,9 +3,12 @@ use 5.008005;
 use strict;
 use warnings;
 use Mouse;
-use MouseX::Types::Mouse qw( Str ArrayRef );
+use MouseX::Types::Mouse qw( Str ArrayRef is_Str );
+use String::Incremental::Types qw( Char );
 use String::Incremental::FormatParser;
 use String::Incremental::Char;
+use Data::Validator;
+use Try::Tiny;
 
 use overload (
     '""' => \&as_string,
@@ -52,6 +55,46 @@ sub as_string {
     return sprintf( $self->format, @vals );
 }
 
+sub set {
+    my $v = Data::Validator->new(
+        val => { isa => Str|ArrayRef[Char] },
+    )->with( 'Method', 'StrictSequenced' );
+    my ($self, $args) = $v->validate( @_ );
+    my $val = $args->{val};
+    if ( is_Str( $val ) ) {
+        $val = [ split //, $val ];
+    }
+
+    if ( @$val != @{$self->chars} ) {
+        my $msg = 'size mismatch: specified value v.s. chars';
+        die $msg;
+    }
+
+    my @ng;
+    for ( my $i = 0; $i < @$val; $i++ ) {
+        my $ch = $self->char( $i );
+        try {
+            $ch->set( $val->[$i], { test => 1 } );
+        } catch {
+            my ($msg) = @_;
+            push @ng, +{ ch => $ch, msg => $msg };
+        };
+    }
+    if ( @ng ) {
+        my $chars = join ',', map "$_->{ch}", @ng;
+        my $msg = sprintf 'problem has occured in: %s', $chars;
+        die $msg;
+    }
+    else {
+        for ( my $i = 0; $i < @$val; $i++ ) {
+            my $ch = $self->char( $i );
+            $ch->set( $val->[$i] );
+        }
+    }
+
+    return "$self";
+}
+
 sub increment {
     my ($self) = @_;
     my ($last_ch) = grep $_->isa( __PACKAGE__ . '::Char' ), reverse @{$self->items};
@@ -92,16 +135,15 @@ String::Incremental - incremental string with your rule
 
     print "$str";  # -> 'foo-14-00-a'
 
-    $str++; $str++;
-    print "$str";  # -> 'foo-14-00-c'
+    $str++; $str++; $str++;
+    print "$str";  # -> 'foo-14-00-d'
 
-    $str++; $str++;
+    $str++;
     print "$str";  # -> 'foo-14-01-a'
 
-    ...
-
+    $str->set( '22d' );
     print "$str";  # -> 'foo-14-22-d';
-    $str++;  # dies
+    $str++;  # dies, cannot ++ any more
 
 =head1 DESCRIPTION
 
@@ -131,6 +173,10 @@ following two variables are equivalent:
 
     my $a = $str->as_string();
     my $b = "$str";
+
+=item set( $val : Str|ArrayRef ) : String::Incremental
+
+sets "incrementable" cheracters to $val.
 
 =item increment() : Str
 
