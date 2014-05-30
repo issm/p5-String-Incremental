@@ -46,6 +46,20 @@ subtest 'args' => sub {
             new( order => 'a', upper => $upper );
         };
     };
+
+    subtest 'set' => sub {
+        dies_ok {
+            new( order => 'abc', set => 'ab' );
+        } 'invalid: not is-a Char';
+
+        dies_ok {
+            new( order => 'abc', set => 'd' );
+        } 'invalid: not in order';
+
+        lives_ok {
+            new( order => 'abc', set => 'c' );
+        };
+    }
 };
 
 subtest 'properties' => sub {
@@ -107,6 +121,15 @@ subtest 'properties' => sub {
             ok $ch->has_upper();
         };
     };
+};
+
+subtest 'set' => sub {
+    my $ch = new( order => 'abc', set => 'c' );
+    is "$ch", 'c';
+    is $ch->__i, 2;
+    dies_ok {
+        $ch->set();
+    } 'should not be available as getter';
 };
 
 done_testing;

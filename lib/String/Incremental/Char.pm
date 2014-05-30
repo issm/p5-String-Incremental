@@ -4,7 +4,7 @@ use warnings;
 use Mouse;
 use Data::Validator;
 use MouseX::Types::Mouse qw( Int );
-use String::Incremental::Types qw( CharOrderStr CharOrderArrayRef is_CharOrderStr );
+use String::Incremental::Types qw( Char CharOrderStr CharOrderArrayRef is_CharOrderStr );
 use Try::Tiny;
 
 use overload (
@@ -24,6 +24,7 @@ sub BUILDARGS {
     my $v = Data::Validator->new(
         order => { isa => CharOrderStr|CharOrderArrayRef },
         upper => { isa => __PACKAGE__, optional => 1 },
+        set   => { isa => Char, optional => 1 },
         __i   => { isa => Int, default => 0 },  # for internal use
     );
     %args = %{$v->validate( \%args )};
@@ -43,6 +44,13 @@ sub BUILDARGS {
     }
 
     return \%args;
+}
+
+sub BUILD {
+    my ($self, $args) = @_;
+    if ( exists $args->{set} ) {
+        $self->set( $args->{set} );
+    }
 }
 
 sub as_string {
