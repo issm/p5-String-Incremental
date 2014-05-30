@@ -44,5 +44,28 @@ subtest 'ok' => sub {
     is $ch->__i, 1;
 };
 
+subtest 'option: set' => sub {
+    my $ch = new( order => 'ace' );
+    is "$ch", 'a';
+
+    dies_ok {
+        $ch->set( 'a', { test => 'foo' } );
+    } 'invalid';
+
+    lives_ok {
+        $ch->set( 'a', { test => 1 } );
+    };
+
+    dies_ok {
+        $ch->set( 'x', { test => 1 } );
+    };
+    is "$ch", 'a';
+
+    lives_ok {
+        $ch->set( 'c', { test => 1 } );
+    };
+    is "$ch", 'a';
+};
+
 done_testing;
 

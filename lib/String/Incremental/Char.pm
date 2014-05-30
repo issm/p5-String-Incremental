@@ -3,7 +3,7 @@ use 5.008005;
 use warnings;
 use Mouse;
 use Data::Validator;
-use MouseX::Types::Mouse qw( Int );
+use MouseX::Types::Mouse qw( Bool Int );
 use String::Incremental::Types qw( Char CharOrderStr CharOrderArrayRef is_CharOrderStr );
 use Try::Tiny;
 
@@ -59,7 +59,12 @@ sub as_string {
 }
 
 sub set {
-    my ($self, $ch) = @_;
+    my ($self, $ch, $opts) = @_;
+    my $v_opts = Data::Validator->new(
+        test => { isa => Bool, default => 0 },
+    );
+    $opts = $v_opts->validate( %{$opts || {}} );
+
     unless ( defined $ch ) {
         die 'value to set must be specified';
     }
@@ -78,7 +83,9 @@ sub set {
         my $msg = srintf( '"%s" is not in order', $ch );
         die $msg;
     }
-    $self->__i( $i );
+    unless ( $opts->{test} ) {
+        $self->__i( $i );
+    }
     return "$self";
 }
 
@@ -210,6 +217,12 @@ following two variables are equivalent:
 
     my $a = $ch->as_string();
     my $b = "$ch";
+
+=item set( $val, \%opts ) : String::Incremental::Char
+
+sets "current" state as $val.
+
+if $opts->{test} is true, "current" state is not update, only returns or dies.
 
 =item increment() : Str
 
