@@ -3,10 +3,15 @@ use 5.008005;
 use strict;
 use warnings;
 use MouseX::Types -declare => [qw(
+    Char
     CharOrderStr
     CharOrderArrayRef
 )];
 use MouseX::Types::Mouse qw( Str ArrayRef );
+
+subtype Char, as Str, where {
+    /^\S$/;
+};
 
 subtype CharOrderStr, as Str, where {
     my $val = shift;

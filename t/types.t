@@ -2,7 +2,30 @@ use strict;
 use warnings;
 use Test::More;
 use Test::Exception;
-use String::Incremental::Types qw( is_CharOrderStr is_CharOrderArrayRef );
+use String::Incremental::Types qw( is_Char is_CharOrderStr is_CharOrderArrayRef );
+
+subtest 'Char' => sub {
+    my @ok = qw(
+        a
+        1
+        %
+        $
+    );
+    my @ng = (
+        '',
+        ' ',
+        'ab',
+        '123',
+    );
+    for ( @ok ) {
+        my $memo = sprintf '"%s" should be-a Char', $_;
+        ok is_Char( $_ ), $memo;
+    }
+    for ( @ng ) {
+        my $memo = sprintf '"%s" should not be-a Char', $_;
+        ok ! is_Char( $_ ), $memo;
+    }
+};
 
 subtest 'CharOrderStr' => sub {
     my @ok = qw(
