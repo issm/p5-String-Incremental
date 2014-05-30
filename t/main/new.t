@@ -15,24 +15,29 @@ subtest 'args' => sub {
     } 'nothing';
 
     lives_ok {
-        new( 'foobar' );
+        new( format => 'foobar' );
     } 'no conversion';
 
     lives_ok {
-        new( 'foo-%2=.%s', 'abc', 'xyz', sub { 'hoge' } );
+        new(
+            format => 'foo-%2=.%s',
+            orders => [ 'abc', 'xyz', sub { 'hoge' } ],
+        );
     } 'num of conversions and num of values/orders are same';
 
     dies_ok {
-        new( 'foo-%2=.%s' );
+        new( format => 'foo-%2=.%s' );
     } 'num of conversions and num of values/orders are different';
 };
 
 subtest 'properties' => sub {
     my $str = new(
-        '%dfoo%2=%04s%%bar',
-        '123',
-        'abc',
-        'hoge',
+        format => '%dfoo%2=%04s%%bar',
+        orders => [
+            '123',
+            'abc',
+            'hoge',
+        ],
     );
     is $str->format, '%dfoo%s%s%04s%%bar';
     is scalar( @{$str->items} ), 5;

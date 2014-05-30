@@ -5,7 +5,8 @@ use Test::Exception;
 use String::Incremental;
 
 sub new {
-    my $str = String::Incremental->new( @_ );
+    my ($format, @orders) = @_;
+    my $str = String::Incremental->new( format => $format, orders => \@orders );
     return $str;
 }
 

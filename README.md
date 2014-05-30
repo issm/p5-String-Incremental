@@ -8,22 +8,23 @@ String::Incremental - incremental string with your rule
     use String::Incremental;
 
     my $str = String::Incremental->new(
-        'foo-%2s-%2=-%=',
-        sub { (localtime)[5] - 100 },
-        [0..2],
-        'abcd',
+        format => 'foo-%2=-%=',
+        orders => [
+            [0..2],
+            'abcd',
+        ],
     );
 
-    print "$str";  # -> 'foo-14-00-a'
+    print "$str";  # -> 'foo-00-a'
 
     $str++; $str++; $str++;
-    print "$str";  # -> 'foo-14-00-d'
+    print "$str";  # -> 'foo-00-d'
 
     $str++;
-    print "$str";  # -> 'foo-14-01-a'
+    print "$str";  # -> 'foo-01-a'
 
     $str->set( '22d' );
-    print "$str";  # -> 'foo-14-22-d';
+    print "$str";  # -> 'foo-22-d';
     $str++;  # dies, cannot ++ any more
 
 # DESCRIPTION
