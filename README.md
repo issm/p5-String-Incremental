@@ -15,6 +15,16 @@ String::Incremental - incremental string with your rule
         ],
     );
 
+    # or
+
+    use String::Incremental qw( incremental_string );
+
+    my $str = incremental_string(
+        'foo-%2=-%=',
+        [0..2],
+        'abcd',
+    );
+
     print "$str";  # -> 'foo-00-a'
 
     $str++; $str++; $str++;

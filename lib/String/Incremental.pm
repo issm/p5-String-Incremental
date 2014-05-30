@@ -17,7 +17,11 @@ use overload (
     '='  => sub { $_[0] },
 );
 
+extends 'Exporter';
+
 our $VERSION = "0.01";
+
+our @EXPORT_OK = qw( incremental_string );
 
 has 'format' => ( is => 'ro', isa => Str );
 has 'items'  => ( is => 'ro', isa => ArrayRef );
@@ -38,6 +42,11 @@ sub BUILDARGS {
         items  => $p->items,
         chars  => [ grep $_->isa( __PACKAGE__ . '::Char' ), @{$p->items} ],
     };
+}
+
+sub incremental_string {
+    my ($format, @orders) = @_;
+    return __PACKAGE__->new( format => $format, orders => \@orders );
 }
 
 sub char {
@@ -138,6 +147,16 @@ String::Incremental - incremental string with your rule
             [0..2],
             'abcd',
         ],
+    );
+
+    # or
+
+    use String::Incremental qw( incremental_string );
+
+    my $str = incremental_string(
+        'foo-%2=-%=',
+        [0..2],
+        'abcd',
     );
 
     print "$str";  # -> 'foo-00-a'
