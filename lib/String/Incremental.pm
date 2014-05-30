@@ -31,6 +31,21 @@ sub BUILDARGS {
     };
 }
 
+sub char {
+    my ($self, $i) = @_;
+    my $ch;
+    unless ( defined $i ) {
+        die 'index to set must be specified';
+    }
+    unless ( $i =~ /^\d+$/ ) {
+        die 'must be specified as Int';
+    }
+    unless ( defined ( $ch = $self->chars->[$i] ) ) {
+        die 'out of index';
+    }
+    return $ch;
+}
+
 sub as_string {
     my ($self) = @_;
     my @vals = map "$_", @{$self->items};
