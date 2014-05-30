@@ -18,6 +18,7 @@ our $VERSION = "0.01";
 
 has 'format' => ( is => 'ro', isa => Str );
 has 'items'  => ( is => 'ro', isa => ArrayRef );
+has 'chars'  => ( is => 'ro', isa => ArrayRef['String::Incremental::Char'] );
 
 sub BUILDARGS {
     my ($class, @args) = @_;
@@ -26,6 +27,7 @@ sub BUILDARGS {
     return +{
         format => $p->format,
         items  => $p->items,
+        chars  => [ grep $_->isa( __PACKAGE__ . '::Char' ), @{$p->items} ],
     };
 }
 

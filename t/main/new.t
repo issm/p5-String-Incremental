@@ -28,18 +28,23 @@ subtest 'args' => sub {
 };
 
 subtest 'properties' => sub {
-    my $fp = new(
+    my $str = new(
         '%dfoo%2=%04s%%bar',
         '123',
         'abc',
         'hoge',
     );
-    is $fp->format, '%dfoo%s%s%04s%%bar';
-    isa_ok $fp->items->[0], 'String::Incremental::String';
-    isa_ok $fp->items->[1], 'String::Incremental::Char';
-    isa_ok $fp->items->[2], 'String::Incremental::Char';
-    isa_ok $fp->items->[3], 'String::Incremental::String';
-    isa_ok $fp->items->[4], 'String::Incremental::String';
+    is $str->format, '%dfoo%s%s%04s%%bar';
+    is scalar( @{$str->items} ), 5;
+    isa_ok $str->items->[0], 'String::Incremental::String';
+    isa_ok $str->items->[1], 'String::Incremental::Char';
+    isa_ok $str->items->[2], 'String::Incremental::Char';
+    isa_ok $str->items->[3], 'String::Incremental::String';
+    isa_ok $str->items->[4], 'String::Incremental::String';
+    is scalar( @{$str->chars} ), 2;
+    for ( @{$str->chars} ) {
+        isa_ok $_, 'String::Incremental::Char';
+    }
 };
 
 done_testing;
