@@ -43,11 +43,11 @@ String::Incremental is ...
 
 # CONSTRUCTORS
 
-- new( @args ) : String::Incremental
+- new( %args ) : String::Incremental
 
-    $args\[0\] : Str
+    format: Str
 
-    $args\[1\], $args\[2\], ... : (Str|ArrayRef) or (Str|CodeRef)
+    orders: ArrayRef
 
 # METHODS
 
@@ -81,6 +81,16 @@ String::Incremental is ...
 
         $str->decrement();
         $str--;
+
+# FUNCTIONS
+
+- incremental\_string( $format, @orders ) : String::Incremental
+
+    another way to construct String::Incremental instance.
+
+    this function is not exported automatically, you need to export manually:
+
+        use String::Incremental qw( incremental_string );
 
 # LICENSE
 

@@ -187,11 +187,11 @@ String::Incremental is ...
 
 =over 4
 
-=item new( @args ) : String::Incremental
+=item new( %args ) : String::Incremental
 
-$args[0] : Str
+format: Str
 
-$args[1], $args[2], ... : (Str|ArrayRef) or (Str|CodeRef)
+orders: ArrayRef
 
 =back
 
@@ -229,6 +229,20 @@ following two operation are equivalent:
 
     $str->decrement();
     $str--;
+
+=back
+
+=head1 FUNCTIONS
+
+=over 4
+
+=item incremental_string( $format, @orders ) : String::Incremental
+
+another way to construct String::Incremental instance.
+
+this function is not exported automatically, you need to export manually:
+
+    use String::Incremental qw( incremental_string );
 
 =back
 
