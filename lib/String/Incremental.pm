@@ -72,39 +72,14 @@ sub as_string {
 
 sub set {
     my $v = Data::Validator->new(
-        val => { isa => Str|ArrayRef[Char] },
+        val => { isa => Str },
     )->with( 'Method', 'StrictSequenced' );
     my ($self, $args) = $v->validate( @_ );
-    my $val = $args->{val};
-    if ( is_Str( $val ) ) {
-        $val = [ split //, $val ];
-    }
 
-    if ( @$val != @{$self->chars} ) {
-        my $msg = 'size mismatch: specified value v.s. chars';
-        die $msg;
-    }
-
-    my @ng;
-    for ( my $i = 0; $i < @$val; $i++ ) {
-        my $ch = $self->char( $i );
-        try {
-            $ch->set( $val->[$i], { test => 1 } );
-        } catch {
-            my ($msg) = @_;
-            push @ng, +{ ch => $ch, msg => $msg };
-        };
-    }
-    if ( @ng ) {
-        my $chars = join ',', map "$_->{ch}", @ng;
-        my $msg = sprintf 'problem has occured in: %s', $chars;
-        die $msg;
-    }
-    else {
-        for ( my $i = 0; $i < @$val; $i++ ) {
-            my $ch = $self->char( $i );
-            $ch->set( $val->[$i] );
-        }
+    my @ch = $self->_extract_incremental_chars( $args->{val} );
+    for ( my $i = 0; $i < @ch; $i++ ) {
+        my $char = $self->char( $i );
+        $char->set( $ch[$i] );
     }
 
     return "$self";
@@ -233,9 +208,9 @@ following two variables are equivalent:
     my $a = $str->as_string();
     my $b = "$str";
 
-=item set( $val : Str|ArrayRef ) : String::Incremental
+=item set( $val : Str ) : String::Incremental
 
-sets "incrementable" cheracters to $val.
+sets to $val.
 
 =item increment() : Str
 

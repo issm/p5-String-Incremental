@@ -22,37 +22,35 @@ subtest 'ng' => sub {
     dies_ok {
         $str->set();
     } 'no arg';
-    is "$str", 'foo-ax', 'should not be updated when die';
 
-    dies_ok {
-        $str->set( 'cz3' );
-    } 'nums are mismatch: "Char" items v.s. chars of arg';
-    is "$str", 'foo-ax', 'should not be updated when die';
-
-    dies_ok {
-        $str->set( 'xa' );
-    } 'out of order: all chars';
-    is "$str", 'foo-ax', 'should not be updated when die';
-
-    dies_ok {
-        $str->set( 'bb' );
-    } 'out of order: one char';
-    is "$str", 'foo-ax', 'should not be updated when die';
+    for (qw(
+        hoge
+        foo-abc
+        foo-ab
+        foo-xx
+    )) {
+        dies_ok {
+            $str->set( $_ );
+        } 'does not match';
+    }
 };
 
 subtest 'ok' => sub {
     my $str = new( '%s-%=%=', 'foo', 'abc', 'xyz' );
     is "$str", 'foo-ax';
 
-    lives_ok {
-        $str->set( 'cz' );
-        is "$str", 'foo-cz';
-    } 'arg is-a Str';
+    $str->set( 'foo-cz' );
+    is "$str", 'foo-cz';
 
-    lives_ok {
-        $str->set( ['b', 'y'] );
-        is "$str", 'foo-by';
-    } 'arg is-a ArrayRef';
+    dies_ok {
+        $str++;
+    } 'of cource, cannot increment';
+
+    $str->set( 'foo-bz' );
+    is "$str", 'foo-bz';
+
+    $str++;
+    is "$str", 'foo-cx';
 };
 
 done_testing;

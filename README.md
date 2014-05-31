@@ -60,9 +60,9 @@ String::Incremental is ...
         my $a = $str->as_string();
         my $b = "$str";
 
-- set( $val : Str|ArrayRef ) : String::Incremental
+- set( $val : Str ) : String::Incremental
 
-    sets "incrementable" cheracters to $val.
+    sets to $val.
 
 - increment() : Str
 
