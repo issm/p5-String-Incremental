@@ -141,6 +141,16 @@ sub decrement {
     return $self->as_string();
 }
 
+sub re {
+    my ($self) = @_;
+    my $re = join '', map {
+        my $i = $_;
+        #  ref: http://search.cpan.org/perldoc?perlrecharclass#Special_Characters_Inside_a_Bracketed_Character_Class
+        ( $i =~ m/[\\\^\-\[\]]/ ) ? "\\${i}" : $i;
+    } @{$self->order};
+    return qr/[$re]/;
+}
+
 __PACKAGE__->meta->make_immutable();
 __END__
 

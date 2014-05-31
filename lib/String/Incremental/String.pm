@@ -30,6 +30,19 @@ sub as_string {
     return sprintf( $self->format, $val );
 }
 
+sub re {
+    my ($self) = @_;
+    my $re;
+    if ( is_CodeRef( $self->value ) ) {
+        $re = '.*?';  # tmp
+    }
+    else {
+        $re = "$self";
+    }
+
+    return qr/$re/;
+}
+
 __PACKAGE__->meta->make_immutable();
 __END__
 
