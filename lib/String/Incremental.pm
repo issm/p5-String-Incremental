@@ -145,6 +145,22 @@ sub re {
     return qr/^(${re})$/;
 }
 
+sub _extract_incremental_chars {
+    my $v = Data::Validator->new(
+        val => { isa => Str },
+    )->with( 'Method', 'StrictSequenced' );
+    my ($self, $args) = $v->validate( @_ );
+    my @ch;
+
+    (my $match, @ch) = $args->{val} =~ $self->re();
+    unless ( defined $match ) {
+        my $msg = 'specified value does not match with me';
+        die $msg;
+    }
+
+    return wantarray ? @ch : \@ch;
+}
+
 __PACKAGE__->meta->make_immutable();
 __END__
 
