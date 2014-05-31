@@ -128,6 +128,23 @@ sub decrement {
     return "$self";
 }
 
+sub re {
+    my ($self) = @_;
+    my ($re, @re);
+
+    @re = map {
+        my $i = $_;
+        my $_re = $i->re();
+        my $ref = ref $_;
+        $ref eq __PACKAGE__ . '::Char' ? "(${_re})" : $_re;
+    } @{$self->items};
+
+    (my $fmt = $self->format) =~ s/%(?:\d+(?:\.?\d+)?)?\S/\%s/g;
+    $re = sprintf $fmt, @re;
+
+    return qr/^(${re})$/;
+}
+
 __PACKAGE__->meta->make_immutable();
 __END__
 
