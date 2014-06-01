@@ -33,7 +33,7 @@ String::Incremental - incremental string with your rule
     $str++;
     print "$str";  # -> 'foo-01-a'
 
-    $str->set( '22d' );
+    $str->set( 'foo-22-d' );
     print "$str";  # -> 'foo-22-d';
     $str++;  # dies, cannot ++ any more
 
