@@ -17,7 +17,7 @@ use overload (
     '='  => sub { $_[0] },
 );
 
-extends 'Exporter';
+extends qw( Exporter Tie::Scalar );
 
 our $VERSION = "0.01";
 
@@ -134,6 +134,20 @@ sub _extract_incremental_chars {
     }
 
     return wantarray ? @ch : \@ch;
+}
+
+sub TIESCALAR {
+    my ($class, @args) = @_;
+    return $class->new( @args );
+}
+
+sub FETCH { $_[0] }
+
+sub STORE {
+    my ($self, @args) = @_;
+    if ( ref( $args[0] ) eq '' ) {  # ignore when ++/--
+        $self->set( @args );
+    }
 }
 
 __PACKAGE__->meta->make_immutable();

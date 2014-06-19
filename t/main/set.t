@@ -53,5 +53,33 @@ subtest 'ok' => sub {
     is "$str", 'foo-cx';
 };
 
-done_testing;
+subtest 'tying' => sub {
+    tie my $str, 'String::Incremental', ( format => '%s-%=%=', orders => [ 'foo', 'abc', 'xyz' ] );
+    ok tied $str, 'should be tied';
+    isa_ok $str, 'String::Incremental';
+    is "$str", 'foo-ax';
 
+    subtest 'ng' => sub {
+        dies_ok { $str = 'hoge' };
+        dies_ok { $str = 'foo-abc' };
+    };
+
+    subtest 'ok' => sub {
+        $str = 'foo-cz';
+        is "$str", 'foo-cz';
+        isa_ok $str, 'String::Incremental';
+        dies_ok {
+            $str++;
+        } 'cannot increment';
+
+        $str = 'foo-bz';
+        is "$str", 'foo-bz';
+        isa_ok $str, 'String::Incremental';
+        lives_ok {
+            $str++;
+            is "$str", 'foo-cx';
+        };
+    };
+};
+
+done_testing;
