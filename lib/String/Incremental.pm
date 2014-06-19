@@ -17,7 +17,7 @@ use overload (
     '='  => sub { $_[0] },
 );
 
-extends 'Exporter';
+extends qw( Exporter Tie::Scalar );
 
 our $VERSION = "0.01";
 
@@ -136,6 +136,20 @@ sub _extract_incremental_chars {
     return wantarray ? @ch : \@ch;
 }
 
+sub TIESCALAR {
+    my ($class, @args) = @_;
+    return $class->new( @args );
+}
+
+sub FETCH { $_[0] }
+
+sub STORE {
+    my ($self, @args) = @_;
+    if ( ref( $args[0] ) eq '' ) {  # ignore when ++/--
+        $self->set( @args );
+    }
+}
+
 __PACKAGE__->meta->make_immutable();
 __END__
 
@@ -211,6 +225,16 @@ following two variables are equivalent:
 =item set( $val : Str ) : String::Incremental
 
 sets to $val.
+
+tying with String::Incremental, assignment syntax is available as synonym of this method:
+
+    tie my $str, 'String::Incremental', (
+        format => 'foo-%2=-%=',
+        orders => [ [0..2], 'abcd' ],
+    );
+
+    $str = 'foo-22-d';  # same as `$str->set( 'foo-22-d' )`
+    print "$str";  # -> 'foo-22-d';
 
 =item increment() : Str
 

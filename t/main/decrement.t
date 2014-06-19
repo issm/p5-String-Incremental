@@ -84,4 +84,23 @@ subtest 'underflow' => sub {
     is "$str", 'aa', 'positional state should not be increased when die';
 };
 
+subtest 'tying' => sub {
+    tie my $str, 'String::Incremental', ( format => '%2=', orders => [ 'abc' ] );
+    ok tied $str, 'should be tied';
+
+    $str->items->[0]->__i( 2 );
+    $str->items->[1]->__i( 2 );
+    is "$str", 'cc';
+
+    lives_ok {
+        $str->decrement();
+        is "$str", 'cb';
+    };
+
+    lives_ok {
+        $str--;
+        is "$str", 'ca';
+    };
+};
+
 done_testing;

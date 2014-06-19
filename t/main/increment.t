@@ -79,4 +79,20 @@ subtest 'overflow' => sub {
     is "$str", 'cc', 'positional state should not be increased when die';
 };
 
+subtest 'tying' => sub {
+    tie my $str, 'String::Incremental', ( format => '%2=', orders => [ 'abc' ] );
+    ok tied $str, 'should be tied';
+    is "$str", 'aa';
+
+    lives_ok {
+        $str->increment();
+        is "$str", 'ab';
+    };
+
+    lives_ok {
+        $str++;
+        is "$str", 'ac';
+    };
+};
+
 done_testing;

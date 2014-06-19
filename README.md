@@ -64,6 +64,16 @@ String::Incremental is ...
 
     sets to $val.
 
+    tying with String::Incremental, assignment syntax is available as synonym of this method:
+
+        tie my $str, 'String::Incremental', (
+            format => 'foo-%2=-%=',
+            orders => [ [0..2], 'abcd' ],
+        );
+
+        $str = 'foo-22-d';  # same as `$str->set( 'foo-22-d' )`
+        print "$str";  # -> 'foo-22-d';
+
 - increment() : Str
 
     increases positional state of order and returns its character.
