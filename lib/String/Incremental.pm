@@ -181,21 +181,21 @@ String::Incremental - incremental string with your rule
         'abcd',
     );
 
-    print "$str";  # -> 'foo-00-a'
+    print "$str";  # prints 'foo-00-a'
 
     $str++; $str++; $str++;
-    print "$str";  # -> 'foo-00-d'
+    print "$str";  # prints 'foo-00-d'
 
     $str++;
-    print "$str";  # -> 'foo-01-a'
+    print "$str";  # prints 'foo-01-a'
 
     $str->set( 'foo-22-d' );
-    print "$str";  # -> 'foo-22-d';
+    print "$str";  # prints 'foo-22-d';
     $str++;  # dies, cannot ++ any more
 
 =head1 DESCRIPTION
 
-String::Incremental is ...
+String::Incremental provides generating string that can increment in accordance with your format and rule.
 
 =head1 CONSTRUCTORS
 
@@ -234,7 +234,7 @@ tying with String::Incremental, assignment syntax is available as synonym of thi
     );
 
     $str = 'foo-22-d';  # same as `$str->set( 'foo-22-d' )`
-    print "$str";  # -> 'foo-22-d';
+    print "$str";  # prints 'foo-22-d';
 
 =item increment() : Str
 
